@@ -18,7 +18,7 @@ def get_gdp_data(country_code):
 
     # 解析HTML文档，提取GDP数据
     soup = BeautifulSoup(html, "html.parser")
-    table = soup.find("table", class_="table") # 找到包含GDP数据的表格
+    table = soup.find("table", class_="table") # 找到包含GDP数据的表 格
     print(type(table))
     rows = table.find_all("tr") # 找到所有的表格行
     for row in rows[1:]: # 跳过表头行，遍历每一行数据
