@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 def add_data():
     add_window = tk.Toplevel(root)
     add_window.title('新增数据')
-    add_window.geometry('300x200')
+    add_window.geometry('300x300')
     add_window.configure(bg='#f0f0f0')
     tk.Label(add_window, text='请输入数据类别：', bg='#f0f0f0', font=('Arial', 12)).pack(pady=10)
     category_entry = tk.Entry(add_window, font=('Arial', 12))
@@ -39,7 +39,7 @@ def save_data(category, year, value):
 def delete_data():
     delete_window = tk.Toplevel(root)
     delete_window.title('删除数据')
-    delete_window.geometry('300x200')
+    delete_window.geometry('300x300')
     delete_window.configure(bg='#f0f0f0')
     tk.Label(delete_window, text='请输入要删除的数据类别：', bg='#f0f0f0', font=('Arial', 12)).pack(pady=10)
     category_entry = tk.Entry(delete_window, font=('Arial', 12))
@@ -51,8 +51,17 @@ def delete_data():
 
 # 删除数据
 def remove_data(category, year):
-    global df
-    df = df.drop(df[(df['类别'] == category) & (df['年份'] == year)].index)
+    #global df
+    # df = df.drop(df[(df['类别'] == category) & (df['年份'] == year)].index)
+    if(category=="经济"):
+        src.del_year.append(year)
+    elif(category=="铁路"):
+        transport.del_rail.append(year)
+    elif(category=="公路"):
+        transport.del_road.append(year)
+    else:
+        tk.messagebox.showinfo('提示', '输入有误！')
+        return
     tk.messagebox.showinfo('提示', '数据已删除')
     root.update()
 
@@ -60,7 +69,7 @@ def remove_data(category, year):
 def update_data():
     update_window = tk.Toplevel(root)
     update_window.title('修改数据')
-    update_window.geometry('300x200')
+    update_window.geometry('300x300')
     update_window.configure(bg='#f0f0f0')
     tk.Label(update_window, text='请输入要修改的数据类别：', bg='#f0f0f0', font=('Arial', 12)).pack(pady=10)
     category_entry = tk.Entry(update_window, font=('Arial', 12))
@@ -75,8 +84,23 @@ def update_data():
 
 # 修改数据
 def change_data(category, year, value):
-    global df
-    df.loc[(df['类别'] == category) & (df['年份'] == year), '数值'] = value
+    # global df
+    # df.loc[(df['类别'] == category) & (df['年份'] == year), '数值'] = value
+    if(category=="中国经济"):
+        src.modify_china[year]=value
+    elif(category=="美国经济"):
+        src.modify_usa[year]=value
+    elif(category=="英国经济"):
+        src.modify_uk[year]=value
+    elif(category=="俄罗斯经济"):
+        src.modify_russia[year]=value
+    elif(category=="铁路"):
+        transport.modify_rail[year]=value
+    elif(category=="公路"):
+        transport.modify_road[year]=value
+    else:
+        tk.messagebox.showinfo('提示', '输入有误！')
+        return
     tk.messagebox.showinfo('提示', '数据已修改')
     root.update()
 
@@ -84,7 +108,7 @@ def change_data(category, year, value):
 def search_data():
     search_window = tk.Toplevel(root)
     search_window.title('查询数据')
-    search_window.geometry('300x200')
+    search_window.geometry('300x300')
     search_window.configure(bg='#f0f0f0')
     tk.Label(search_window, text='请输入要查询的数据类别：', bg='#f0f0f0', font=('Arial', 12)).pack(pady=10)
     category_entry = tk.Entry(search_window, font=('Arial', 12))
@@ -96,12 +120,24 @@ def search_data():
 
 # 查询数据
 def find_data(category, year):
-    global df
-    data = df[(df['类别'] == category) & (df['年份'] == year)]
-    if len(data) > 0:
-        tk.messagebox.showinfo('查询结果', f'类别：{data.iloc[0]["类别"]}，年份：{data.iloc[0]["年份"]}，数值：{data.iloc[0]["数值"]}')
+    # global df
+    # data = df[(df['类别'] == category) & (df['年份'] == year)]
+    # if len(data) > 0:
+    #     tk.messagebox.showinfo('查询结果', f'类别：{data.iloc[0]["类别"]}，年份：{data.iloc[0]["年份"]}，数值：{data.iloc[0]["数值"]}')
+    # else:
+    #     tk.messagebox.showerror('查询结果', '未找到符合条件的数据')
+    if(category=="经济"):
+        data=src.search_eco(year)
+    elif(category=="公路"):
+        data=transport.search_road(year)
+    elif(category=="铁路"):
+        data=transport.search_rail(year)
+    elif(category=="卫星"):
+        data=space.search(year)
     else:
-        tk.messagebox.showerror('查询结果', '未找到符合条件的数据')
+        tk.messagebox.showinfo('提示', '输入有误！')
+        return
+    tk.messagebox.showinfo('查询结果', f'类别：{category}，年份：{year}，数值：{data}')
     root.update()
 
 
@@ -223,3 +259,4 @@ show_main_menu()
 
 # 运行主循环
 root.mainloop()
+
