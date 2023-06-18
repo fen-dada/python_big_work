@@ -9,6 +9,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 matplotlib.rcParams['font.family'] = 'SimHei'
 import matplotlib.pyplot as plt
+#hehe
 
 # 新增数据
 def add_data():
